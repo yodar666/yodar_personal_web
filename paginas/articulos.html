@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- data-encabezado="compacto": general.js lo detecta y importa el encabezado ya reducido -->
+<html lang="es" data-encabezado="compacto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../recursos/rosa-neon-64x64(2).png">
+    <!-- general.css ya importa los estilos de la plantilla; css/articulos.css lo añade general.js (paginas.json) -->
+    <link rel="stylesheet" href="../css/general.css">
+    <title>yodar · artículos</title>
+</head>
+<body data-pagina="articulos">
+
+    <!-- Estos dos huecos los rellena general.js con el encabezado y el pie de la plantilla -->
+    <div class="encabezado"></div>
+
+    <div class="cuerpo">
+
+        <!-- Selector: una nota por página de datos/paginas.json (lo rellena general.js) -->
+        <div class="selector" id="selector" role="navigation" aria-label="Páginas del sitio">
+            <div class="selector_lista" id="selector_lista"></div>
+        </div>
+
+        <!-- Contenido: dos tarjetas. La de navegación está desactivada y solo se activa por código -->
+        <div class="contenido contenido_solo" id="contenido">
+
+            <aside class="tarjeta tarjeta_navegacion" id="tarjeta_navegacion" aria-label="Artículos de esta página" hidden>
+                <p class="tarjeta_titulo">Artículos</p>
+                <ul class="navegacion_lista" id="navegacion_lista"></ul>
+            </aside>
+
+            <section class="tarjeta tarjeta_articulo" id="tarjeta_articulo">
+                <article class="articulo" id="articulo_1" data-titulo="Artículos">
+                    <h1>Artículos</h1>
+                    <p>
+                        Esta sección está dedicada a publicar los resultados de mis investigaciones
+                        sobre temas de interés, que no necesariamente están relacionados con el
+                        desarrollo de software.
+                    </p>
+                </article>
+            </section>
+        </div>
+    </div>
+
+    <footer class="pie_pagina"></footer>
+
+    <!-- general.js importa el encabezado y el pie, carga plantilla.js y, al final, css/js específicos -->
+    <script src="../js/general.js"></script>
+</body>
+</html>

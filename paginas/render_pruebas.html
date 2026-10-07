@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="../recursos/rosa-neon-64x64(2).png">
+<title>Render 3D</title>
+<style>
+    body { margin: 0; padding: 10px; background: #101010; color: #ddd; font: 14px monospace;
+            display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    #controles { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: center; }
+    label { display: flex; gap: 6px; align-items: center; }
+    select, input { background: #1c1c1c; color: #ddd; border: 1px solid #444; border-radius: 4px; padding: 3px 6px; font: inherit; }
+    input[type=color] { width: 44px; height: 28px; padding: 0; }
+    input[type=range] { padding: 0; }
+    canvas { max-width: 100%; height: auto; }
+</style>
+</head>
+<body>
+    <div id="controles">
+        <label>Figura
+            <select id="forma"></select>
+        </label>
+        <label>Animación
+            <select id="animacion">
+                <option value="estatico">Estático</option>
+                <option value="rotar_y" selected>Rotar eje Y</option>
+                <option value="rotar_x">Rotar eje X</option>
+                <option value="rotar_xy">Rotar ejes X e Y</option>
+                <option value="eliptica">Acercar / alejar (elíptico)</option>
+            </select>
+        </label>
+        <label>Color
+            <input type="color" id="color" value="#50ff50">
+        </label>
+        <label>Cámara (altura)
+            <input type="range" id="camara" min="-0.8" max="0.8" step="0.05" value="0"
+                    oninput="camOut.value = Number(this.value).toFixed(2)"
+                    ondblclick="this.value = 0; camOut.value = '0.00'">
+            <output id="camOut">0.00</output>
+        </label>
+        <label>Velocidad
+            <input type="range" id="velocidad" min="0" max="4" step="0.1" value="1"
+                    oninput="velOut.value = Number(this.value).toFixed(1) + 'x'">
+            <output id="velOut">1.0x</output>
+        </label>
+    </div>
+    <canvas id="game"></canvas>
+    <script src="../js/render.js"></script>
+</body>
+</html>

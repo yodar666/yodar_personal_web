@@ -1,0 +1,29 @@
+{
+    "index":{
+        "css":"",
+        "js":"",
+        "a_possition":"index.html",
+        "articulos":1
+    },
+    "articulos":{
+        "css":"articulos.css",
+        "js":"articulos.js",
+        "a_possition":"paginas/articulos.html",
+        "articulos":{
+            "graficos_3d":{
+                "css":"N",
+                "js":"N"}
+        }
+    },
+    "videojuegos":{
+        "css":"videojuegos.css",
+        "js":"videojuegos.js",
+        "a_possition":"paginas/videojuegos.html",
+        "articulos":{
+            "ejemplo":{
+                "css":"N",
+                "js":"N"
+            }
+        }
+    }
+}

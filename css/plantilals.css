@@ -1,0 +1,688 @@
+:root {
+    --fondo: #FDFFFC;
+    --panel: #F3F8F0;
+    --texto: #000000;
+    --texto-suave: #2F342D;
+    --texto-sub: #7D8579;
+    --borde: rgba(0, 0, 0, .12);
+    --borde-fuerte: rgba(0, 0, 0, .28);
+    --acento: #3E6B2C;
+    --neon: #A9D18E;
+    --neon-rgb: 169, 209, 142;
+    --brillo: .55;
+    --sombra-titulo: none;
+    --punto: #D0E6C3;
+    --luz: .14;
+    --alto-pie: 62px;
+    --alto-pie-abierto: 224px;
+    --alto-compacto: 64px;
+    color-scheme: light;
+}
+
+html[data-estilo="verde"] {
+    --fondo: #000000;
+    --panel: #080B07;
+    --texto: #FDFFFC;
+    --texto-suave: #D0E6C3;
+    --texto-sub: #8A9386;
+    --borde: rgba(208, 230, 195, .16);
+    --borde-fuerte: rgba(208, 230, 195, .38);
+    --acento: #9EFF6B;
+    --neon: #2BFF00;
+    --neon-rgb: 43, 255, 0;
+    --brillo: .75;
+    --sombra-titulo: 0 0 48px rgba(43, 255, 0, .25);
+    --luz: .24;
+    --punto: #2BFF00;
+    color-scheme: dark;
+}
+
+html[data-estilo="azul"] {
+    --fondo: #000000;
+    --panel: #05080B;
+    --texto: #FCFEFF;
+    --texto-suave: #C3D9E6;
+    --texto-sub: #8892A0;
+    --borde: rgba(195, 217, 230, .16);
+    --borde-fuerte: rgba(195, 217, 230, .38);
+    --acento: #6BC4FF;
+    --neon: #00B3FF;
+    --neon-rgb: 0, 179, 255;
+    --brillo: .75;
+    --sombra-titulo: 0 0 48px rgba(0, 179, 255, .25);
+    --luz: .24;
+    --punto: #00B3FF;
+    color-scheme: dark;
+}
+
+html[data-estilo="rosa"] {
+    --fondo: #000000;
+    --panel: #0B060A;
+    --texto: #FFFCFE;
+    --texto-suave: #E6C3D8;
+    --texto-sub: #A08A98;
+    --borde: rgba(230, 195, 216, .16);
+    --borde-fuerte: rgba(230, 195, 216, .38);
+    --acento: #FF6BC1;
+    --neon: #FF1FAF;
+    --neon-rgb: 255, 31, 175;
+    --brillo: .75;
+    --sombra-titulo: 0 0 48px rgba(255, 31, 175, .25);
+    --luz: .24;
+    --punto: #FF1FAF;
+    color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--neon-rgb), .55) var(--fondo);
+}
+
+@supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: var(--fondo); }
+    ::-webkit-scrollbar-thumb {
+        background: rgba(var(--neon-rgb), .55);
+        border-radius: 10px;
+        border: 2px solid var(--fondo);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--neon); }
+}
+
+body {
+    margin: 0;
+    padding-top: 100dvh;
+    min-height: 100dvh;
+    background: var(--fondo);
+    color: var(--texto-suave);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .4s ease, color .4s ease;
+}
+
+/* Página interior: el encabezado arranca contraído, no hace falta reservar la pantalla del hero */
+html[data-encabezado="compacto"] body { padding-top: var(--alto-compacto); }
+
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+a { color: inherit; text-decoration: none; }
+
+:focus-visible {
+    outline: 2px solid var(--neon);
+    outline-offset: 3px;
+}
+
+@keyframes desvanecer {
+    to { opacity: 0; }
+}
+
+@keyframes plegar_titulo {
+    from { opacity: 1; max-height: 2rem; margin-bottom: .6rem; }
+    to   { opacity: 0; max-height: 0;    margin-bottom: 0; }
+}
+
+@keyframes nace_luz {
+    from { opacity: 0; scale: .25; }
+    to   { opacity: 1; scale: 1; }
+}
+
+@keyframes respirar {
+    0%, 100% { opacity: .8; scale: 1; }
+    50%      { opacity: 1;  scale: 1.08; }
+}
+
+/* =========================================================
+   BOTONES CON NEÓN DETRÁS
+   El brillo es un ::after desenfocado que queda detrás del botón.
+   ========================================================= */
+
+.boton_opciones,
+.opcion,
+.boton_pie {
+    position: relative;
+    background: var(--fondo);
+    border: 1px solid var(--borde-fuerte);
+    transition: border-color .25s ease, color .25s ease, background-color .4s ease;
+}
+
+.boton_opciones::after,
+.opcion::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--neon);
+    filter: blur(16px);
+    opacity: 0;
+    transition: opacity .25s ease;
+    pointer-events: none;
+}
+
+.opcion::after { filter: blur(10px); }
+
+.boton_opciones:hover, .boton_opciones:focus-visible,
+.opcion:hover, .opcion:focus-visible,
+.boton_pie:hover, .boton_pie:focus-visible {
+    border-color: var(--neon);
+    color: var(--acento);
+}
+
+.boton_opciones:hover::after, .boton_opciones:focus-visible::after,
+.opcion:hover::after, .opcion:focus-visible::after {
+    opacity: var(--brillo);
+}
+
+.boton_pie:hover, .boton_pie:focus-visible {
+    box-shadow: 0 0 10px rgba(var(--neon-rgb), .6), 0 0 22px rgba(var(--neon-rgb), .3);   /* sutil */
+}
+
+/* =========================================================
+   ENCABEZADO
+   El JS escribe --p (0 a 1) según el scroll: 0 = pantalla completa,
+   1 = aplanado. Todo se interpola con ese valor, sin saltos.
+   ========================================================= */
+
+.encabezado {
+    --p: 0;
+    --pad: clamp(16px, 3vw, 32px);
+    --pad-x-compacto: clamp(14px, 2.5vw, 28px);
+
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    height: calc(100dvh - (100dvh - var(--alto-compacto)) * var(--p));
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    padding-top: calc(var(--pad) * (1 - var(--p)) + 10px * var(--p));
+    padding-bottom: calc(var(--pad) * (1 - var(--p)) + 10px * var(--p));
+    padding-inline: calc(var(--pad) + (var(--pad-x-compacto) - var(--pad)) * var(--p));
+    background: color-mix(in srgb, var(--fondo) calc(100% - 12% * var(--p)), transparent);
+    -webkit-backdrop-filter: blur(calc(12px * var(--p)));
+    backdrop-filter: blur(calc(12px * var(--p)));
+    border-bottom: 1px solid color-mix(in srgb, var(--borde) calc(var(--p) * 100%), transparent);
+    transition: height .18s ease-out, padding .18s ease-out, background-color .4s ease;
+}
+
+.encabezado_izquierda { grid-area: 1 / 1 / 2 / 2; align-self: start;  justify-self: start; position: relative; z-index: 1; }
+.encabezado_centro    { grid-area: 1 / 1 / 2 / 4; align-self: center; justify-self: center; text-align: center;
+                        position: relative;
+                        scale: calc(1 - var(--p));                 /* se escala hasta desaparecer */
+                        opacity: calc(1 - var(--p) * 1.25);
+                        transition: scale .18s ease-out, opacity .18s ease-out; }
+.encabezado_derecha   { grid-area: 1 / 3 / 2 / 4; align-self: end;    justify-self: end;   position: relative; z-index: 1; }
+
+/* ---- Luz neón tenue que nace en el centro del título ---- */
+
+.encabezado_centro::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: -1;
+    width: min(80vw, 900px);
+    height: min(42vw, 420px);
+    translate: -50% -50%;
+    background: radial-gradient(closest-side,
+                rgba(var(--neon-rgb), var(--luz)),
+                rgba(var(--neon-rgb), calc(var(--luz) * .35)) 55%,
+                transparent 100%);
+    pointer-events: none;
+    animation: nace_luz 2.4s ease-out both,
+               respirar 7s ease-in-out 2.4s infinite;
+}
+
+/* ---- Botón del título: solo texto, más grueso ---- */
+
+.boton_titulo {
+    height: 28px;
+    margin-top: calc(8px * var(--p));    /* se alinea al centro al aplanarse */
+    padding: 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 28px;
+    letter-spacing: .02em;
+    color: var(--texto);
+    transition: color .25s ease, text-shadow .25s ease;
+}
+
+.boton_titulo:hover,
+.boton_titulo:focus-visible {
+    color: var(--acento);
+    text-shadow: 0 0 10px rgba(var(--neon-rgb), .85), 0 0 28px rgba(var(--neon-rgb), .5);
+}
+
+.titulo_principal {
+    margin: 0;
+    font-size: clamp(3rem, 10vw, 8.5rem);
+    font-weight: 200;
+    line-height: 1;
+    letter-spacing: -.035em;
+    color: var(--texto);
+    text-shadow: var(--sombra-titulo);
+}
+
+.subtitulo {
+    margin: 1.2rem 0 0;
+    font-size: clamp(.75rem, 1.2vw, .95rem);
+    font-weight: 400;
+    letter-spacing: .38em;
+    text-transform: uppercase;
+    color: var(--texto-sub);
+}
+
+/* ---- Botón de opciones: redondo, solo tres puntos que se reescalan ---- */
+
+.boton_opciones {
+    --tam: calc(88px - 44px * var(--p));
+    width: var(--tam);
+    height: var(--tam);
+    display: flex;
+    border-radius: 50%;
+    font-size: 0;                    /* el texto queda solo para lectores de pantalla */
+    color: var(--texto);
+    transition: width .18s ease-out, height .18s ease-out,
+                border-color .25s ease, color .25s ease, background-color .4s ease;
+}
+
+.boton_opciones::before {
+    content: "";
+    width: calc(var(--tam) * .075);
+    height: calc(var(--tam) * .075);
+    margin: auto;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: calc(var(--tam) * -.19) 0 currentColor,
+                calc(var(--tam) *  .19) 0 currentColor;
+}
+
+/* ---- Paneles (estilos e idioma comparten aspecto y animación) ---- */
+
+.panel_opciones,
+.seccion_idiomas {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    background: var(--panel);
+    border: 1px solid var(--borde);
+    border-radius: 18px;
+    box-shadow: 0 14px 44px rgba(0, 0, 0, .35);
+}
+
+.panel_opciones {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 14px);       /* con el encabezado grande, se abre hacia arriba */
+    z-index: 5;
+    width: 230px;
+    animation: aparecer .22s ease;
+}
+
+/* El selector de idioma aparece como una tarjeta hermana, a un lado del panel */
+.seccion_idiomas {
+    position: absolute;
+    right: calc(100% + 12px);
+    bottom: 0;
+    width: 200px;
+}
+.seccion_idiomas:not([hidden]) { animation: aparecer .22s ease; }
+
+.seccion_titulo {
+    margin: 0 0 8px;
+    font-size: .68rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--texto-sub);
+}
+
+.lista_opciones {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.opcion {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: .55rem .85rem;
+    border-radius: 10px;
+    background: var(--panel);
+    border-color: var(--borde);
+    text-align: left;
+    font-size: .88rem;
+    color: var(--texto-suave);
+}
+
+/* Muestra del color de cada estilo */
+.opcion_estilo::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    margin-right: .7rem;
+    border-radius: 50%;
+    background: var(--punto-opcion, var(--texto-sub));
+}
+.opcion_estilo[data-estilo="claro"] { --punto-opcion: #D0E6C3; }
+.opcion_estilo[data-estilo="verde"] { --punto-opcion: #2BFF00; }
+.opcion_estilo[data-estilo="azul"]  { --punto-opcion: #00B3FF; }
+.opcion_estilo[data-estilo="rosa"]  { --punto-opcion: #FF1FAF; }
+
+.opcion_activa {
+    border-color: var(--neon);
+    color: var(--acento);
+}
+
+.opcion_abrir_idioma[aria-expanded="true"] { border-color: var(--borde-fuerte); color: var(--texto); }
+
+/* ---- Encabezado aplanado (lo pone el JS al pasar de la mitad del recorrido) ---- */
+
+.encabezado_compacto .encabezado_centro { pointer-events: none; }
+
+/* Totalmente aplanado: el título ya no se ve, así que no se pinta ni se anima */
+.encabezado_plano .encabezado_centro { visibility: hidden; }
+.encabezado_plano .encabezado_centro::before { animation-play-state: paused; }
+
+/* Con el pentagrama, la luz tras el título también es roja (sin importar el estilo) */
+.encabezado_pentagrama .encabezado_centro {
+    --neon-rgb: 255, 0, 0;
+    --luz: .22;
+}
+
+/* Lienzo 2D (rosa / estrella) detrás del título */
+.lienzo_fondo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: -1;
+    width: min(60vw, 520px);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    pointer-events: none;
+}
+
+/* Úsala en tus secciones: el navegador no las pinta hasta que se acercan a la pantalla */
+.renderizar_en_pantalla {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+}
+
+.encabezado_compacto .panel_opciones {
+    bottom: auto;
+    top: calc(100% + 14px);          /* aplanado, se abre hacia abajo */
+}
+
+/* =========================================================
+   PIE DE PÁGINA
+   ========================================================= */
+
+.pie_pagina {
+    --icono: 26px;
+    --sep-h: 18px;                   /* separación entre iconos contraído (fila) */
+    --sep-v: 12px;                   /* separación entre redes expandido (columna) */
+    --dur-pie: .5s;
+
+    --alto: var(--alto-pie);         /* altura actual del panel */
+
+    position: relative;              /* al final de la página, no sigue a la pantalla */
+    z-index: 60;
+    height: var(--alto);             /* reserva el espacio expandido para no cubrir el contenido */
+}
+
+.pie_expandido { --alto: var(--alto-pie-abierto); }
+.pie_cerrando  { --alto: var(--alto-pie); }     /* el JS lo pone mientras se cierra */
+
+.boton_pie {
+    position: absolute;
+    bottom: calc(var(--alto) - 15px);   /* sigue el borde superior del panel */
+    left: calc(50% - 15px);
+    z-index: 2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: .6rem;
+    line-height: 1;
+    color: var(--texto-sub);
+    transition: bottom var(--dur-pie) cubic-bezier(.4, 0, .2, 1),
+                border-color .25s ease, color .25s ease,
+                box-shadow .25s ease, background-color .4s ease;
+}
+
+.pie_contenido {
+    position: absolute;              /* anclado abajo: al expandirse crece hacia arriba */
+    inset: auto 0 0 0;
+    height: var(--alto);
+    background: var(--fondo);
+    border-top: 1px solid var(--borde);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: 24px;
+    padding: 18px clamp(16px, 3vw, 32px);
+    transition: height var(--dur-pie) cubic-bezier(.4, 0, .2, 1),
+                padding var(--dur-pie) cubic-bezier(.4, 0, .2, 1),
+                background-color .4s ease, border-color .4s ease;
+}
+
+.pie_redes    { grid-column: 1; }
+.pie_cita     { grid-column: 2; text-align: center; }
+.pie_contacto { grid-column: 3; justify-self: end; text-align: right; }
+
+/* ---- Redes ---- */
+
+.lista_redes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: row;             /* contraído: fila de iconos */
+    gap: var(--sep-h);
+}
+
+.red_enlace {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: var(--icono);
+    color: var(--texto-suave);
+    transition: color .25s ease;
+}
+
+.red_icono { display: inline-flex; }
+
+.icono_svg {
+    width: var(--icono);
+    height: var(--icono);
+    transition: filter .25s ease;
+}
+
+.red_usuario {
+    font-size: .88rem;
+    letter-spacing: .03em;
+    transition: text-shadow .25s ease;
+}
+
+/* Brillo neón sutil en todo lo clicable del pie */
+.red_enlace:hover,
+.red_enlace:focus-visible { color: var(--acento); }
+
+.red_enlace:hover .icono_svg,
+.red_enlace:focus-visible .icono_svg { filter: drop-shadow(0 0 5px var(--neon)) drop-shadow(0 0 12px rgba(var(--neon-rgb), .5)); }
+
+.red_enlace:hover .red_usuario,
+.red_enlace:focus-visible .red_usuario { text-shadow: 0 0 10px rgba(var(--neon-rgb), .6); }
+
+/* ---- Cita ---- */
+
+.cita { margin: 0; }
+
+.cita_texto {
+    margin: 0 0 .7rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--texto);
+}
+.cita_texto::before { content: "\201C"; }
+.cita_texto::after  { content: "\201D"; }
+
+.cita_autor {
+    font-size: .74rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--texto-sub);
+}
+.cita_autor::before { content: "— "; }
+
+/* ---- Contacto / comentarios ---- */
+
+.contacto_titulo {
+    overflow: hidden;
+    margin: 0 0 .6rem;
+    font-size: .68rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--texto-sub);
+}
+
+.contacto_panel:not([hidden]) { animation: aparecer .4s ease; }
+
+.contacto_enlace { flex-direction: row-reverse; }   /* el icono queda fijo al borde derecho */
+
+.comentario_texto {
+    margin: 0 0 .35rem;
+    font-size: .95rem;
+    color: var(--texto);
+}
+.comentario_autor {
+    margin: 0;
+    font-size: .8rem;
+    color: var(--texto-sub);
+}
+
+/* ---- Pie expandido ---- */
+
+.pie_expandido .pie_contenido {
+    padding-top: 40px;
+    padding-bottom: 32px;
+}
+
+.pie_expandido .lista_redes {
+    flex-direction: column;          /* expandido: columna con usuario al lado */
+    gap: var(--sep-v);
+}
+
+
+/* Los iconos viajan rápido de su posición en fila a su posición en columna */
+.lista_redes .red_item:nth-child(1) { --i: 0; }
+.lista_redes .red_item:nth-child(2) { --i: 1; }
+.lista_redes .red_item:nth-child(3) { --i: 2; }
+.lista_redes .red_item:nth-child(4) { --i: 3; }
+
+@keyframes reacomodar {
+    from {
+        translate: calc(var(--i) * (var(--icono) + var(--sep-h)))
+                   calc(var(--i) * (var(--icono) + var(--sep-v)) * -1);
+    }
+    to { translate: 0 0; }
+}
+
+.pie_expandido .red_item {
+    animation: reacomodar .35s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.pie_expandido .red_usuario { animation: aparecer .45s ease .12s both; }
+/* ---- Cierre suave: el JS pone .pie_cerrando durante .5s antes de contraer ---- */
+
+.pie_cerrando .pie_contenido {
+    padding-top: 18px;
+    padding-bottom: 18px;
+}
+
+@keyframes replegar {
+    from { translate: 0 0; }
+    to {
+        translate: calc(var(--i) * (var(--icono) + var(--sep-h)))
+                   calc(var(--i) * (var(--icono) + var(--sep-v)) * -1);
+    }
+}
+
+.pie_cerrando .red_item     { animation: replegar .4s cubic-bezier(.4, 0, .2, 1) both; }
+.pie_cerrando .red_usuario,
+.pie_cerrando .pie_cita     { animation: desvanecer .3s ease both; }
+.pie_cerrando .contacto_titulo { animation: plegar_titulo .3s ease both; }
+.pie_cerrando .contacto_panel:not([hidden]) { animation: none; }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 720px) {
+
+    .encabezado {
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+    .encabezado_izquierda { grid-area: 1 / 1 / 2 / 2; }
+    .encabezado_centro    { grid-area: 2 / 1 / 3 / 3; }
+    .encabezado_derecha   { grid-area: 1 / 2 / 4 / 3; }
+
+    .subtitulo { letter-spacing: .26em; }
+
+    /* El selector de idioma se apila con el panel en vez de ir a su lado */
+    .seccion_idiomas {
+        right: 0;
+        bottom: calc(100% + 12px);
+    }
+    .encabezado_compacto .seccion_idiomas {
+        bottom: auto;
+        top: calc(100% + 12px);
+    }
+
+    /* Pie: contraído en dos columnas, expandido apilado */
+    .pie_pagina { --alto-pie-abierto: min(520px, 80dvh); }
+    .pie_contenido { grid-template-columns: 1fr auto; }
+    .pie_redes    { grid-column: 1; }
+    .pie_contacto { grid-column: 2; }
+
+    .pie_expandido .pie_contenido {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        overflow-y: auto;
+    }
+    .pie_expandido .pie_redes,
+    .pie_expandido .pie_cita,
+    .pie_expandido .pie_contacto { grid-column: 1; }
+    .pie_expandido .pie_cita { text-align: left; }
+    .pie_expandido .pie_contacto { justify-self: start; text-align: left; }
+    .pie_expandido .contacto_enlace { flex-direction: row; }
+
+    /* Móvil: sin correo de contacto (solo quedan los comentarios) */
+    .contacto_info { display: none; }
+    .pie_cerrando .contacto_comentarios:not([hidden]) { animation: desvanecer .3s ease both; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

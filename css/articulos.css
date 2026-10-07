@@ -1,0 +1,47 @@
+/* =========================================================
+   articulos.css  ·  CSS específico de la página "articulos"
+   Sin @layer: gana al general y a la plantilla.
+   Reescribe el fondo para dejar ver las burbujas.
+   ========================================================= */
+
+body[data-pagina="articulos"] {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+body[data-pagina="articulos"] .cuerpo {
+    flex: 1 0 auto;
+}
+
+body[data-pagina="articulos"] .pie_pagina {
+    position: relative;
+    inset: auto;
+    flex: 0 0 auto;
+}
+
+/* Lienzo del fondo (lo crea js/articulos.js) */
+#fondo_burbujas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* El contenido queda por encima del lienzo; encabezado (50) y pie (60) ya están por encima */
+body[data-pagina="articulos"] .cuerpo {
+    position: relative;
+    z-index: 1;
+}
+
+/* Tarjeta translúcida para que las burbujas se vean detrás sin perder legibilidad */
+body[data-pagina="articulos"] .tarjeta_articulo {
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--panel) 82%, transparent) 0%,
+        color-mix(in srgb, var(--panel) 62%, transparent) 60%,
+        color-mix(in srgb, var(--panel) 30%, transparent) 100%);
+    border-radius: 12px;
+}

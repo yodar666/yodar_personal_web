@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!-- data-encabezado="compacto": general.js lo detecta y importa el encabezado ya reducido -->
+<html lang="es" data-encabezado="compacto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../recursos/rosa-neon-64x64(2).png">
+    <!-- general.css ya importa los estilos de la plantilla; css/videojuegos.css lo añade general.js (paginas.json) -->
+    <link rel="stylesheet" href="../css/general.css">
+    <title>yodar · videojuegos</title>
+</head>
+<body data-pagina="videojuegos">
+
+    <!-- Estos dos huecos los rellena general.js con el encabezado y el pie de la plantilla -->
+    <div class="encabezado"></div>
+
+    <div class="cuerpo">
+
+        <!-- Selector: una nota por página de datos/paginas.json (lo rellena general.js) -->
+        <div class="selector" id="selector" role="navigation" aria-label="Páginas del sitio">
+            <div class="selector_lista" id="selector_lista"></div>
+        </div>
+
+        <!-- Contenido: dos tarjetas. La de navegación está desactivada y solo se activa por código -->
+        <div class="contenido contenido_solo" id="contenido">
+
+            <aside class="tarjeta tarjeta_navegacion" id="tarjeta_navegacion" aria-label="Artículos de esta página" hidden>
+                <p class="tarjeta_titulo">Artículos</p>
+                <ul class="navegacion_lista" id="navegacion_lista"></ul>
+            </aside>
+
+            <section class="tarjeta tarjeta_articulo" id="tarjeta_articulo">
+                <article class="articulo" id="articulo_1" data-titulo="Videojuegos">
+                    <h1>Videojuegos</h1>
+                    <p>
+                        Aquí reuniré mis proyectos de videojuegos: prototipos, entregas de game jams
+                        y cualquier idea que termine convirtiéndose en algo jugable.
+                    </p>
+                    <h2>Próximamente</h2>
+                    <p>
+                        Esta sección todavía está en construcción. Mientras tanto, puedes ver
+                        lo que tengo publicado en itch.io o jugar al snake.
+                    </p>
+
+                    <!-- Minijuego: la lógica está en js/videojuegos.js -->
+                    <div class="snake_juego" id="snake_juego">
+                        <div class="snake_tablero" id="snake_tablero">
+                            <canvas id="snake_lienzo" width="480" height="480" aria-label="Tablero de snake de 6 por 6"></canvas>
+                            <button type="button" class="snake_play" id="snake_play" aria-label="Jugar">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>
+                            </button>
+                        </div>
+                        <p class="snake_estado" id="snake_estado" aria-live="polite"></p>
+                    </div>
+                </article>
+            </section>
+        </div>
+    </div>
+
+    <footer class="pie_pagina"></footer>
+
+    <!-- Popup de victoria del snake (fuera de .cuerpo para quedar por encima del encabezado y el pie) -->
+    <div class="snake_popup" id="snake_popup" role="dialog" aria-modal="true" aria-labelledby="snake_popup_titulo" hidden>
+        <div class="snake_popup_caja">
+            <svg class="galleta_neon" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                <path d="M69 17.1 A38 38 0 1 0 87.4 56.6 A9 9 0 0 1 87 41.5 A9 9 0 0 1 80.7 27.7 A9 9 0 0 1 69 17.1 Z"/>
+                <circle cx="38" cy="36" r="3.4"/>
+                <circle cx="58" cy="52" r="3.4"/>
+                <circle cx="33" cy="60" r="3.4"/>
+                <circle cx="52" cy="30" r="3"/>
+                <circle cx="48" cy="72" r="3.4"/>
+                <circle cx="68" cy="66" r="3"/>
+            </svg>
+            <p class="snake_popup_titulo" id="snake_popup_titulo">Felicidades, toma una galleta</p>
+            <button type="button" class="snake_popup_cerrar" id="snake_popup_cerrar">Jugar de nuevo</button>
+        </div>
+    </div>
+
+    <!-- general.js importa el encabezado y el pie, carga plantilla.js y, al final, css/js específicos -->
+    <script src="../js/general.js"></script>
+</body>
+</html>

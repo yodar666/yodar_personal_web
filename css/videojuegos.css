@@ -1,0 +1,196 @@
+/* =========================================================
+   videojuegos.css  ·  CSS específico de la página "videojuegos"
+   Sin @layer: gana al general y a la plantilla.
+   Reescribe el fondo para dejar ver la simulación de serpientes.
+   ========================================================= */
+
+body[data-pagina="videojuegos"] {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+body[data-pagina="videojuegos"] .cuerpo {
+    flex: 1 0 auto;
+}
+
+body[data-pagina="videojuegos"] .pie_pagina {
+    position: relative;
+    inset: auto;
+    flex: 0 0 auto;
+}
+
+/* Lienzo del fondo (lo crea js/videojuegos.js) */
+#fondo_snake {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* El contenido queda por encima del lienzo; encabezado (50) y pie (60) ya están por encima */
+body[data-pagina="videojuegos"] .cuerpo {
+    position: relative;
+    z-index: 1;
+}
+
+/* La tarjeta deja de ser opaca para que las serpientes se vean detrás,
+   con suficiente panel para que el texto siga leyéndose bien */
+body[data-pagina="videojuegos"] .tarjeta_articulo {
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--panel) 82%, transparent) 0%,
+        color-mix(in srgb, var(--panel) 62%, transparent) 60%,
+        color-mix(in srgb, var(--panel) 30%, transparent) 100%);
+    border-radius: 12px;
+}
+
+/* =========================================================
+   MINIJUEGO SNAKE (6x6)
+   Los colores salen de las variables del estilo activo;
+   la comida es siempre roja.
+   ========================================================= */
+
+.snake_juego {
+    width: min(100%, 320px);
+    margin: 1.8rem auto 0;
+}
+
+.snake_tablero {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--fondo) 78%, transparent);
+    border: 1px solid var(--borde-fuerte);
+    border-radius: 12px;
+    box-shadow: 0 0 18px rgba(var(--neon-rgb), calc(var(--brillo) * .25));
+    transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+.snake_tablero.snake_error {
+    border-color: #ff444b;
+    box-shadow: 0 0 18px rgba(255, 36, 44, .6);
+}
+
+#snake_lienzo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;          /* permite deslizar sobre el tablero sin desplazar la página */
+}
+
+.snake_play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    padding: 0;
+    color: var(--resalte);
+    background: color-mix(in srgb, var(--fondo) 55%, transparent);
+    border: 0;
+    cursor: pointer;
+    backdrop-filter: blur(2px);
+}
+
+.snake_play[hidden] { display: none; }
+
+.snake_play svg {
+    width: 28%;
+    height: auto;
+    fill: currentColor;
+    filter: drop-shadow(0 0 6px rgba(var(--neon-rgb), .9))
+            drop-shadow(0 0 16px rgba(var(--neon-rgb), calc(var(--brillo) * .8)));
+    transition: transform .2s ease;
+}
+
+.snake_play:hover svg,
+.snake_play:focus-visible svg { transform: scale(1.12); }
+
+.snake_estado {
+    min-height: 1.5em;
+    margin: .8rem 0 0;
+    font-size: .9rem;
+    color: var(--texto-sub);
+}
+
+/* ---- Popup de victoria ---- */
+
+.snake_popup {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, .6);
+    backdrop-filter: blur(3px);
+}
+
+.snake_popup[hidden] { display: none; }
+
+.snake_popup_caja {
+    width: min(100%, 340px);
+    padding: 2rem 1.6rem 1.8rem;
+    text-align: center;
+    color: var(--texto);
+    background: var(--fondo);
+    border: 1px solid var(--neon);
+    border-radius: 14px;
+    box-shadow: 0 0 22px rgba(var(--neon-rgb), calc(var(--brillo) * .5));
+    animation: snake_popup_entrada .3s ease;
+}
+
+.galleta_neon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1rem;
+    display: block;
+    fill: rgba(var(--neon-rgb), .12);
+    stroke: var(--resalte);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 4px rgba(var(--neon-rgb), .9))
+            drop-shadow(0 0 14px rgba(var(--neon-rgb), calc(var(--brillo) * .9)));
+}
+
+.galleta_neon circle { fill: var(--resalte); stroke: none; }
+
+.snake_popup_titulo {
+    margin: 0 0 1.4rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--resalte);
+    text-shadow: 0 0 18px rgba(var(--neon-rgb), calc(var(--brillo) * .4));
+}
+
+.snake_popup_cerrar {
+    padding: .6rem 1.2rem;
+    font: inherit;
+    font-size: .95rem;
+    color: var(--texto);
+    background: var(--panel);
+    border: 1px solid var(--borde-fuerte);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+.snake_popup_cerrar:hover,
+.snake_popup_cerrar:focus-visible {
+    border-color: var(--neon);
+    box-shadow: 0 0 12px rgba(var(--neon-rgb), calc(var(--brillo) * .45));
+}
+
+@keyframes snake_popup_entrada {
+    from { opacity: 0; transform: translateY(8px) scale(.96); }
+    to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .snake_popup_caja { animation: none; }
+    .snake_play svg { transition: none; }
+}

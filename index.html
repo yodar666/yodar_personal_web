@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="recursos/rosa-neon-64x64(2).png">
+    <!-- general.css ya importa los estilos de la plantilla; el CSS específico lo añade general.js -->
+    <link rel="stylesheet" href="css/general.css">
+    <title>yodar</title>
+</head>
+<body data-pagina="index">
+
+    <!-- Estos dos huecos los rellena general.js con el encabezado y el pie de la plantilla -->
+    <div class="encabezado"></div>
+
+    <div class="cuerpo">
+
+        <!-- Selector: una nota por página de datos/paginas.json (lo rellena general.js) -->
+        <div class="selector" id="selector" role="navigation" aria-label="Páginas del sitio">
+            <div class="selector_lista" id="selector_lista"></div>
+        </div>
+
+        <!-- Contenido: dos tarjetas. La de navegación está desactivada y solo se activa por código -->
+        <div class="contenido contenido_solo" id="contenido">
+
+            <!-- Tarjeta 1 (izquierda): navegación entre los artículos de la página -->
+            <aside class="tarjeta tarjeta_navegacion" id="tarjeta_navegacion" aria-label="Artículos de esta página" hidden>
+                <p class="tarjeta_titulo">Artículos</p>
+                <ul class="navegacion_lista" id="navegacion_lista"></ul>
+            </aside>
+
+            <!-- Tarjeta 2: contenido. Cada <article class="articulo"> es un artículo -->
+            <section class="tarjeta tarjeta_articulo" id="tarjeta_articulo">
+                <article class="articulo" id="articulo_1" data-titulo="Yodar 666">
+                    <h1>Yodar 666</h1>
+                    <p>
+                        Yodar 666 es el nombre de usuario que utilizo en la mayoría de mis redes
+                        sociales. En plataformas como itch.io y GitHub comparto de vez en cuando
+                        algunos de mis proyectos de desarrollo.
+                    </p>
+                    <h2>GitHub</h2>
+                    <p>
+                        Actualmente tengo un único proyecto público, desarrollado principalmente
+                        en Python. Lo hice para iniciarme y aprender sobre web scraping.
+                    </p>
+                    <h2>itch.io</h2>
+                    <p>
+                        Mi perfil está relativamente abandonado. He participado en algunas game
+                        jams, pero ahora mismo no puedo acceder a los proyectos que presenté.
+                        Espero participar en más durante los próximos meses.
+                    </p>
+                </article>
+
+            </section>
+        </div>
+    </div>
+
+    <footer class="pie_pagina"></footer>
+
+    <script src="js/general.js"></script>
+</body>
+</html>

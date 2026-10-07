@@ -1,0 +1,311 @@
+/* =========================================================
+   JERARQUÍA DE ESTILOS (de menor a mayor valor)
+     1. plantilla   -> plantilals.css (encabezado, pie y temas)
+     2. general     -> este archivo
+     3. especifico  -> el CSS de cada página (paginas.json)
+
+   Un CSS específico escrito SIN @layer (o dentro de "@layer especifico")
+   gana siempre al general y a la plantilla, aunque sus selectores sean
+   menos específicos.
+   ========================================================= */
+
+@layer plantilla, general, especifico;
+
+/* Los estilos (temas, encabezado, pie) se importan de la plantilla */
+@import url("plantilals.css") layer(plantilla);
+
+@layer general {
+
+    /* Las variables de color (--fondo, --texto, --neon...) las definen
+       los temas de la plantilla; aquí solo se añade lo propio del cuerpo. */
+
+    :root {
+        /* Color de los títulos del contenido: el que más resalta en cada estilo */
+        --resalte: var(--acento);
+
+        --ancho-pagina: 1100px;
+    }
+
+    /* En los estilos oscuros, el más resaltante es el neón saturado */
+    html[data-estilo="verde"],
+    html[data-estilo="azul"],
+    html[data-estilo="rosa"] {
+        --resalte: var(--neon);
+    }
+
+    @keyframes general_aparecer {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* =====================================================
+       CUERPO: selector arriba, contenido debajo
+       ===================================================== */
+
+    .cuerpo {
+        width: min(100% - 2rem, var(--ancho-pagina));
+        margin: 0 auto;
+        padding: 2.5rem 0 6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .aviso_carga {
+        margin: 0;
+        padding: .9rem 1.1rem;
+        font-size: .9rem;
+        color: var(--texto);
+        background: var(--panel);
+        border: 1px dashed var(--borde-fuerte);
+        border-radius: 8px;
+        overflow-wrap: anywhere;
+    }
+
+    /* =====================================================
+       SELECTOR: cada página es una nota / marcador de página
+       Solo el título; el detalle (ruta, artículos, css y js) va en el tooltip.
+       ===================================================== */
+
+    .selector {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .selector_lista {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        column-gap: .2rem;
+        row-gap: .8rem;
+        padding: .5rem 0 .7rem;
+    }
+
+    .selector_mensaje {
+        margin: 0;
+        color: var(--texto-sub);
+    }
+
+    .nota {
+        --nota: #FFF1A8;                     /* amarillo */
+        --giro: -1.6deg;
+
+        display: block;
+        position: relative;
+        z-index: 0;
+        margin-inline: -.18rem;
+        color: #1B1B1B;
+        text-decoration: none;
+        transform: rotate(var(--giro));
+        transform-origin: 50% 0;             /* cuelga desde arriba, como pegada */
+        filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .28));
+        transition: transform .25s ease, filter .25s ease;
+    }
+
+    /* Colores de post-it / marcador, en ciclo */
+    .nota:nth-child(6n + 2) { --nota: #FFC6DC; }   /* rosa */
+    .nota:nth-child(6n + 3) { --nota: #BFE3FF; }   /* azul */
+    .nota:nth-child(6n + 4) { --nota: #D0E6C3; }   /* verde */
+    .nota:nth-child(6n + 5) { --nota: #FFD8A8; }   /* naranja */
+    .nota:nth-child(6n)     { --nota: #E2CCFF; }   /* lila */
+
+    /* Cada una pegada con su propia inclinación */
+    .nota:nth-child(4n + 2) { --giro: 1.2deg; }
+    .nota:nth-child(4n + 3) { --giro: -.6deg; }
+    .nota:nth-child(4n)     { --giro: 1.8deg; }
+
+    .nota_cara {
+        position: relative;
+        display: block;
+        min-width: 96px;
+        padding: .6rem 1.2rem .7rem;
+        font-size: .92rem;
+        font-weight: 700;
+        letter-spacing: .02em;
+        text-align: center;
+        white-space: nowrap;
+        background: var(--nota);
+        /* esquina inferior derecha doblada */
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 11px), calc(100% - 11px) 100%, 0 100%);
+    }
+
+    .nota_cara::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 11px;
+        height: 11px;
+        background: linear-gradient(135deg, rgba(0, 0, 0, .2) 50%, transparent 50%);
+    }
+
+    /* Al pasar el cursor: se despega un poco y brilla en neón */
+    .nota:hover,
+    .nota:focus-visible {
+        z-index: 2;
+        transform: rotate(0deg) translateY(-3px) scale(1.07);
+        filter: drop-shadow(0 0 4px rgba(var(--neon-rgb), .9))
+                drop-shadow(0 0 12px rgba(var(--neon-rgb), calc(var(--brillo) * .9)));
+    }
+
+    /* La página actual: levantada, con brillo y el título subrayado */
+    .nota_actual {
+        transform: rotate(var(--giro)) translateY(-4px);
+        filter: drop-shadow(0 0 6px rgba(var(--neon-rgb), calc(var(--brillo) * .9)));
+    }
+
+    .nota_actual .nota_cara {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+    }
+
+    /* =====================================================
+       CONTENIDO: tarjeta de navegación + tarjeta del artículo
+       La navegación solo se activa por código: Pagina.activarNavegacion(true)
+       ===================================================== */
+
+    .contenido {
+        display: grid;
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    /* Navegación desactivada: una sola tarjeta, centrada */
+    .contenido_solo {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+    }
+
+    /* Navegación activada: navegación a la izquierda, artículo a la derecha */
+    .contenido_con_navegacion {
+        grid-template-columns: minmax(200px, 270px) minmax(0, 1fr);
+    }
+
+    .tarjeta {
+        background: var(--panel);
+        border: 1px solid var(--borde);
+        border-radius: 12px;
+        transition: background-color .4s ease, border-color .4s ease;
+    }
+
+    /* ---- Tarjeta de navegación ---- */
+
+    .tarjeta_navegacion {
+        position: sticky;
+        top: calc(var(--alto-compacto, 64px) + 1rem);
+        padding: 1.3rem 1.1rem;
+    }
+
+    .tarjeta_titulo {
+        margin: 0 0 .9rem;
+        font-size: .9rem;
+        font-weight: 600;
+        color: var(--texto);
+    }
+
+    .navegacion_lista {
+        display: grid;
+        gap: .4rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .navegacion_opcion {
+        display: block;
+        width: 100%;
+        padding: .55rem .8rem;
+        font: inherit;
+        font-size: .9rem;
+        text-align: left;
+        color: var(--texto-suave);
+        text-decoration: none;
+        background: var(--panel);
+        border: 1px solid var(--borde);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: border-color .25s ease, color .25s ease, box-shadow .25s ease;
+    }
+
+    .navegacion_opcion:hover,
+    .navegacion_opcion:focus-visible {
+        border-color: var(--neon);
+        color: var(--resalte);
+        box-shadow: 0 0 12px rgba(var(--neon-rgb), calc(var(--brillo) * .45));
+    }
+
+    .navegacion_opcion[aria-current="true"] {
+        border-color: var(--neon);
+        color: var(--resalte);
+    }
+
+    /* ---- Tarjeta del artículo ---- */
+
+    .tarjeta_articulo {
+        width: 100%;
+        padding: 2.8rem clamp(1.2rem, 5vw, 3.2rem) 2.6rem;
+        border: 0;
+        border-radius: 0;
+        background: linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 45%, var(--fondo)) 62%, var(--fondo) 100%);
+    }
+
+    .contenido_solo .tarjeta_articulo {
+        max-width: 780px;
+        text-align: center;                  /* tarjeta única: texto centrado */
+    }
+
+    .articulo { animation: general_aparecer .3s ease; }
+
+    .articulo > :first-child { margin-top: 0; }
+    .articulo > :last-child  { margin-bottom: 0; }
+
+    .articulo p {
+        margin: 0 0 1.2rem;
+        font-size: 1.05rem;
+        line-height: 1.8;
+    }
+
+    .numero_neon {
+        color: #ff444b;
+        font-weight: 600;
+        text-shadow: 0 0 4px rgba(255, 36, 44, .85),
+                     0 0 12px rgba(255, 0, 18, .7),
+                     0 0 24px rgba(255, 0, 18, .45);
+    }
+
+    /* Los títulos usan el color que más resalta en cada estilo */
+    .tarjeta_articulo h1,
+    .tarjeta_articulo h2,
+    .tarjeta_articulo h3 {
+        margin: 2.2rem 0 .8rem;
+        line-height: 1.2;
+        letter-spacing: -.02em;
+        color: var(--resalte);
+        text-shadow: 0 0 22px rgba(var(--neon-rgb), calc(var(--brillo) * .35));
+    }
+
+    .tarjeta_articulo h1 { font-size: clamp(2rem, 5vw, 3rem);  font-weight: 300; }
+    .tarjeta_articulo h2 { font-size: clamp(1.5rem, 3.4vw, 1.9rem); font-weight: 400; }
+    .tarjeta_articulo h3 { font-size: 1.2rem; font-weight: 600; }
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+
+    @media (max-width: 720px) {
+
+        .cuerpo { gap: 2rem; padding-top: 1.5rem; }
+
+        .contenido_con_navegacion { grid-template-columns: minmax(0, 1fr); }
+        .tarjeta_navegacion { position: static; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .nota:hover, .nota:focus-visible { transform: rotate(var(--giro)); }
+        .nota_actual { transform: none; }
+    }
+}

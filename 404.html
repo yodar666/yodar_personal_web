@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" data-encabezado="compacto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <link rel="icon" type="image/png" href="recursos/rosa-neon-64x64(2).png">
+    <title>404 | Página no encontrada</title>
+    <link rel="stylesheet" href="css/general.css">
+    <link rel="stylesheet" href="css/404.css">
+</head>
+<body class="pagina_404" data-pagina="404">
+    <canvas id="cascada_codigo" aria-hidden="true"></canvas>
+    <div class="encabezado"></div>
+
+    <main class="error404_principal">
+        <section class="error404_contenido" aria-labelledby="error404_titulo">
+            <p class="error404_codigo">ERROR // 404</p>
+            <h1 class="error404_titulo" id="error404_titulo">Esta ruta no existe.</h1>
+            <p class="error404_descripcion">
+                La página pudo haberse movido o eliminado, o quizá la dirección contiene un error.
+                Comprueba la URL o regresa al inicio del sitio.
+            </p>
+            <p class="error404_url-etiqueta">Dirección solicitada</p>
+            <code class="error404_url" id="url_solicitada"></code>
+            <a class="error404_inicio" id="enlace_inicio" href="/index.html">Volver al inicio</a>
+        </section>
+    </main>
+
+    <footer class="pie_pagina"></footer>
+
+    <script src="js/general.js"></script>
+    <script src="js/404.js"></script>
+</body>
+</html>

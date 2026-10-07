@@ -1,0 +1,125 @@
+body.pagina_404 {
+    --alto: var(--alto-pie);
+
+    display: flex;
+    min-height: 100dvh;
+    flex-direction: column;
+    padding-top: var(--alto-compacto, 64px);
+    background: var(--fondo);
+    color: var(--texto-suave);
+}
+
+#cascada_codigo {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    opacity: .38;
+    pointer-events: none;
+}
+
+body.pagina_404 .pie_pagina,
+.error404_principal {
+    position: relative;
+    z-index: 1;
+}
+
+body.pagina_404 .pie_pagina { z-index: 60; }
+
+.error404_principal {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    width: min(100% - 2rem, 900px);
+    min-height: calc(100dvh - var(--alto-compacto, 64px) - var(--alto-pie, 62px));
+    margin-inline: auto;
+    padding: 3rem 0;
+    background: rgba(2, 8, 4, .9);
+}
+
+html[data-estilo="claro"] .error404_principal {
+    --texto: #e7ffed;
+    --texto-suave: #c2dfc9;
+    --texto-sub: #a4bbaa;
+}
+
+.error404_contenido {
+    width: 100%;
+    max-width: 720px;
+    padding-left: clamp(1rem, 4vw, 2.5rem);
+    border-left: 2px solid var(--neon);
+    text-shadow: 0 0 24px rgba(var(--neon-rgb), .14);
+}
+
+.error404_codigo {
+    margin: 0 0 1rem;
+    color: var(--neon);
+    font: 600 .85rem/1.4 ui-monospace, Consolas, monospace;
+    text-transform: uppercase;
+}
+
+.error404_titulo {
+    max-width: 13ch;
+    margin: 0 0 1rem;
+    color: var(--texto);
+    font-size: 3.5rem;
+    font-weight: 500;
+    line-height: 1.05;
+}
+
+.error404_descripcion {
+    max-width: 58ch;
+    margin: 0 0 2rem;
+    font-size: 1.05rem;
+    line-height: 1.75;
+}
+
+.error404_url-etiqueta {
+    margin: 0 0 .55rem;
+    color: var(--texto-sub);
+    font: 600 .75rem/1.4 ui-monospace, Consolas, monospace;
+    text-transform: uppercase;
+}
+
+.error404_url {
+    display: block;
+    max-width: 100%;
+    margin: 0 0 2rem;
+    color: var(--neon);
+    font: .9rem/1.6 ui-monospace, Consolas, monospace;
+    overflow-wrap: anywhere;
+}
+
+.error404_inicio {
+    display: inline-flex;
+    min-height: 46px;
+    align-items: center;
+    padding: .65rem 1.1rem;
+    border: 1px solid var(--borde-fuerte);
+    border-radius: 4px;
+    color: var(--texto);
+    background: rgba(7, 19, 11, .88);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.error404_inicio:hover,
+.error404_inicio:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--neon);
+    box-shadow: 0 0 18px rgba(var(--neon-rgb), .3);
+}
+
+@media (max-width: 600px) {
+    .error404_principal { padding-block: 2rem; }
+    .error404_titulo { font-size: 2.5rem; }
+    .error404_descripcion { font-size: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .error404_inicio { transition: none; }
+    .error404_inicio:hover,
+    .error404_inicio:focus-visible { transform: none; }
+}
